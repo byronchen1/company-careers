@@ -12,7 +12,7 @@ def _otpp_postings(url="https://otppb.wd3.myworkdayjobs.com/OntarioTeachers_Care
     driver.set_window_position(-10000,0)
 
     desc=[]
-    elems = driver.find_elements_by_xpath('.//div[@class = "WD2F WB2F"]')
+    elems = driver.find_elements_by_xpath('.//li[@data-automation-id = "compositeContainer"]')
     for e in elems:
         contents = e.text.replace('\n', ' | ').split(" | ")
         for c in range(len(contents)):
@@ -112,6 +112,8 @@ def create_dfs():
     df = pd.concat([df1,df2,df3],sort=True)
     return df[['Title','Post Date','Link']]
 
-if name == '__main__':
+if __name__ == "__main__":
     df=create_dfs()
-    print(df)
+    f = open("postings.txt", "w")
+    f.write(f"{df}")
+    f.close()
