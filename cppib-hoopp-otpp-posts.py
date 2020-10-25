@@ -114,6 +114,5 @@ def create_dfs():
 
 if __name__ == "__main__":
     df=create_dfs()
-    f = open("postings.txt", "w")
-    f.write(f"{df}")
-    f.close()
+    df.to_csv("postings.csv",index=False)
+    df
