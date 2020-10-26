@@ -132,7 +132,7 @@ def imco_pspib_df():
 
     df5 = pd.DataFrame(data5,columns=['Title','Location','ID','Post Date','Link'])
     df5 = df5[~df5["Title"].str.contains("Intern") & ~df5["Title"].str.contains("New Grad")]
-    df5 = df5[df5["Location"].str.contains("Montreal")]
+    df5 = df5[df5["Location"].str.contains("Toronto")]
     df5 = df5[df5["Title"].str.contains("Analyst") | df5["Title"].str.contains("Associate") | df5["Title"].str.contains("Invest")]
 
     df = pd.concat([df4,df5],sort=True)
