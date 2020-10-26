@@ -78,7 +78,11 @@ def _cppib_postings(url="https://www.cppinvestments.com/careers/experienced-prof
 
             desc.append(contents)
         try:
-            driver.find_element_by_xpath('.//button[@class = "action next"]').click()
+            next_btn = driver.find_element_by_xpath('.//button[@class = "action next"]')
+            driver.execute_script("arguments[0].scrollIntoView();", next_btn)
+            # Scroll up slightly, the button is covered by a banner.
+            driver.execute_script("window.scrollBy(0,-150);")
+            next_btn.click()
         except:
             next_possible=False
     
@@ -115,4 +119,3 @@ def create_dfs():
 if __name__ == "__main__":
     df=create_dfs()
     df.to_csv("postings.csv",index=False)
-    df
