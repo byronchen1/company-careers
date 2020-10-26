@@ -19,7 +19,7 @@ def _otpp_postings(url="https://otppb.wd3.myworkdayjobs.com/OntarioTeachers_Care
             contents[c]=contents[c].strip()
         if len(contents)<4:
             contents.insert(2, np.NaN)
-        contents.insert(4, "https://otppb.wd3.myworkdayjobs.com/OntarioTeachers_Careers")
+        contents.insert(4, url)
         desc.append(contents)
 
     driver.quit()
@@ -92,7 +92,7 @@ def _cppib_postings(url="https://www.cppinvestments.com/careers/experienced-prof
     driver.quit()
     return desc
 
-def create_dfs():
+def cpp_otpp_hoopp():
     data = _otpp_postings()
     data2 = _hoopp_posting()
     data3 = _cppib_postings()
@@ -116,6 +116,31 @@ def create_dfs():
     df = pd.concat([df1,df2,df3],sort=True)
     return df[['Title','Post Date','Link']]
 
+def _imco_pspib():
+    imco = "https://imcoinvest.wd3.myworkdayjobs.com/IMCO"
+    pspib = "https://investpsp.wd3.myworkdayjobs.com/en-US/psp_careers"
+    df_imco = _otpp_postings(url=imco)
+    df_pspib = _otpp_postings(url=pspib)
+    return df_imco,df_pspib
+
+def imco_pspib_df():
+    data4,data5=_imco_pspib()
+    df4 = pd.DataFrame(data4,columns=['Title','ID','Location','Post Date','Link'])
+    df4 = df4[~df4["Title"].str.contains("Intern") & ~df4["Title"].str.contains("New Grad")]
+    df4 = df4[df4["Location"].str.contains("Toronto")]
+    df4 = df4[df4["Title"].str.contains("Analyst") | df4["Title"].str.contains("Associate") | df4["Title"].str.contains("Invest")]
+
+    df5 = pd.DataFrame(data5,columns=['Title','Location','ID','Post Date','Link'])
+    df5 = df5[~df5["Title"].str.contains("Intern") & ~df5["Title"].str.contains("New Grad")]
+    df5 = df5[df5["Location"].str.contains("Montreal")]
+    df5 = df5[df5["Title"].str.contains("Analyst") | df5["Title"].str.contains("Associate") | df5["Title"].str.contains("Invest")]
+
+    df = pd.concat([df4,df5],sort=True)
+    return df[['Title','Post Date','Link']]
+
 if __name__ == "__main__":
-    df=create_dfs()
-    df.to_csv("postings.csv",index=False)
+    coh_df=cpp_otpp_hoopp()
+    coh_df.to_csv("postings_1.csv",index=False)
+    
+    ip_df=imco_pspib_df()
+    ip_df.to_csv("postings_2.csv",index=False)
